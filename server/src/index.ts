@@ -31,6 +31,10 @@ const voteLimiter = rateLimit({
 
 const voteSchema = z.object({ winnerId: z.string().uuid(), loserId: z.string().uuid() });
 
+app.get('/health', (_req, res) => {
+  return res.status(200).json({ ok: true });
+});
+
 app.get('/api/matchup', async (req, res) => {
   const exclude = typeof req.query.exclude === 'string' ? req.query.exclude : undefined;
   const matchup = await selectMatchup(exclude);

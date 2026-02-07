@@ -56,8 +56,6 @@ Elo is stored as integers (computed as float then rounded).
 
 ```bash
 npm install
-npm install --prefix server
-npm install --prefix client
 ```
 
 2. Set environment variables in `server/.env`:
@@ -72,8 +70,8 @@ NODE_ENV=development
 3. Generate Prisma client and run migrations:
 
 ```bash
-npm run prisma:generate --prefix server
-npm run prisma:migrate --prefix server
+npm run prisma:generate
+npm run prisma:migrate
 ```
 
 4. Run dev servers (Express + Vite):
@@ -109,7 +107,7 @@ npm run dev
 4. Railway runs `railway.json` deploy command:
 
 ```bash
-npm run prisma:deploy --prefix server && npm run start
+npm run prisma:deploy && npm run start
 ```
 
 5. App listens on `process.env.PORT` and serves SPA from Express in production.
@@ -123,3 +121,12 @@ npm run prisma:deploy --prefix server && npm run start
   - fingerprint-based exact dedupe
   - near-duplicate merging via Levenshtein ratio `>= 0.92`
 - URL import is idempotent.
+
+
+## Railway troubleshooting
+
+- If Railway shows **"Failed to get private network endpoint"** in the Networking tab, this is usually a Railway control-plane/networking issue (or private networking not yet provisioned), not an application code bug.
+- Your web app can still work via **Public Networking**. Click **Generate Domain** and use that URL.
+- Ensure the service has these vars set: `DATABASE_URL`, `ADMIN_TOKEN`, `NODE_ENV=production`.
+- This repo now exposes `GET /health` and Railway is configured to health-check that endpoint.
+- If startup fails, check deploy logs for Prisma errors; migrations run on boot via `npm run prisma:deploy`.
