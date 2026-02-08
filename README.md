@@ -130,3 +130,4 @@ npm run prisma:deploy && npm run start
 - Ensure the service has these vars set: `DATABASE_URL`, `ADMIN_TOKEN`, `NODE_ENV=production`.
 - This repo now exposes `GET /health` and Railway is configured to health-check that endpoint.
 - If startup fails, check deploy logs for Prisma errors; migrations run on boot via `npm run prisma:deploy`.
+- If build fails with `tsc: not found` or `vite: not found`, Railway likely installed production-only deps. This repo config forces `npm install --include=dev` during build in `railway.json`.
