@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
+import type { Prisma } from '@prisma/client';
 import { prisma } from './db.js';
 import { requireAdmin } from './adminAuth.js';
 import { selectMatchup } from './matchmaking.js';
@@ -60,12 +61,12 @@ app.post('/api/vote', voteLimiter, async (req, res) => {
     return res.status(400).json({ error: 'winnerId and loserId must be distinct.' });
   }
 
-  await prisma.$transaction(async (tx) => {
+  await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
     const quotes = await tx.quote.findMany({ where: { id: { in: [winnerId, loserId] } } });
     if (quotes.length !== 2) throw new Error('Quote not found');
 
-    const winner = quotes.find((q) => q.id === winnerId);
-    const loser = quotes.find((q) => q.id === loserId);
+    const winner = quotes.find((q: { id: string }) => q.id === winnerId);
+    const loser = quotes.find((q: { id: string }) => q.id === loserId);
     if (!winner || !loser) throw new Error('Quote not found');
 
     const { winnerNext, loserNext } = updateEloPair(
@@ -99,7 +100,7 @@ app.get('/api/leaderboard', async (req, res) => {
   const limit = Math.min(Number(req.query.limit ?? 50), 100);
   const quotes = await prisma.quote.findMany({ orderBy: { elo: 'desc' }, take: Number.isNaN(limit) ? 50 : limit });
   return res.json(
-    quotes.map((q) => {
+    quotes.map((q: { id: string; text: string; elo: number; wins: number; losses: number; voteCount: number }) => {
       const total = q.wins + q.losses;
       return {
         ...toQuoteDTO(q),

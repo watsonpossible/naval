@@ -40,7 +40,9 @@ const extractQuotesFromHtml = (html: string): string[] => {
     let next = $(el).next();
     while (next.length) {
       if (next.is('h1, h2, h3, h4')) break;
-      next.find('li').each((__, li) => rawQuotes.push($(li).text()));
+      next.find('li').each((__, li) => {
+        rawQuotes.push($(li).text());
+      });
       next = next.next();
     }
   });

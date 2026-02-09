@@ -11,3 +11,8 @@ export type MatchupResponse = {
   left: QuoteDTO;
   right: QuoteDTO;
 };
+
+export type QuoteRecord = QuoteDTO & {
+  createdAt?: Date;
+  fingerprint?: string;
+};

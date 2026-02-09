@@ -52,6 +52,8 @@ Elo is stored as integers (computed as float then rounded).
 
 ## Local setup
 
+Prerequisite: **Node.js 20.18.1+**.
+
 1. Install dependencies:
 
 ```bash
@@ -99,7 +101,7 @@ npm run dev
 
 1. Create a Railway project and add a **Postgres** service.
 2. Connect this repository.
-3. Set Railway environment variables:
+3. Set Railway environment variables (Railway should use Node 20+ from `engines` in `package.json`):
    - `DATABASE_URL`
    - `ADMIN_TOKEN`
    - `NODE_ENV=production`
